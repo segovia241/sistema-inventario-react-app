@@ -37,7 +37,7 @@ export function LoginForm() {
       }
 
       // Guardar token en localStorage
-      localStorage.setItem("authToken", data.user)
+      localStorage.setItem("authToken", JSON.stringify(data.user))
       localStorage.setItem("usuario", JSON.stringify(data.user))
 
       // Redirigir al dashboard

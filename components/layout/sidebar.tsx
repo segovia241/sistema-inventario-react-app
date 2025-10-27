@@ -81,12 +81,6 @@ export function Sidebar() {
         </nav>
 
         <div className="absolute bottom-4 left-4 right-4 space-y-2">
-          <Link href="/dashboard/settings">
-            <button className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-sidebar-foreground hover:bg-sidebar-accent transition-colors">
-              <Settings size={20} />
-              <span>Configuración</span>
-            </button>
-          </Link>
           <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-destructive hover:bg-destructive/10 transition-colors"
