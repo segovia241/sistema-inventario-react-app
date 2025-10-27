@@ -31,7 +31,7 @@ export default function NuevaVentaPage() {
   const [items, setItems] = useState<ItemVenta[]>([])
   const [selectedProducto, setSelectedProducto] = useState("")
   const [cantidad, setCantidad] = useState("")
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {

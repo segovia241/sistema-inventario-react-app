@@ -27,7 +27,7 @@ export default function ComprasPage() {
   const [filteredCompras, setFilteredCompras] = useState<Compra[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {

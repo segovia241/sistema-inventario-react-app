@@ -41,7 +41,7 @@ export default function InventarioPage() {
     cantidad: "",
     razon: "",
   })
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {

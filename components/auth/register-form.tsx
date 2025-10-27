@@ -20,7 +20,7 @@ export function RegisterForm() {
   })
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target

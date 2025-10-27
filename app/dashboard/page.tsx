@@ -23,7 +23,7 @@ export default function DashboardPage() {
     comprasHoy: 0,
   })
   const [loading, setLoading] = useState(true)
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {

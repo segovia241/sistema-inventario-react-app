@@ -27,7 +27,7 @@ export default function VentasPage() {
   const [filteredVentas, setFilteredVentas] = useState<Venta[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {

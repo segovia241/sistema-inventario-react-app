@@ -12,7 +12,7 @@ export default function EditarProductoPage() {
   const [marcas, setMarcas] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
 
   useEffect(() => {
     const token = localStorage.getItem("authToken")

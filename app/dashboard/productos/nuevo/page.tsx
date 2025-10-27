@@ -9,7 +9,7 @@ export default function NuevoProductoPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [categorias, setCategorias] = useState<any[]>([])
   const [marcas, setMarcas] = useState<any[]>([])
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
 
   useEffect(() => {
     const token = localStorage.getItem("authToken")

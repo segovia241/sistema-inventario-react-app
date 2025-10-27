@@ -23,7 +23,7 @@ export default function CategoriasPage() {
   const [showForm, setShowForm] = useState(false)
   const [editingId, setEditingId] = useState<string | null>(null)
   const [formData, setFormData] = useState({ nombre: "", descripcion: "" })
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || ""
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
 
   useEffect(() => {
     const token = localStorage.getItem("authToken")
