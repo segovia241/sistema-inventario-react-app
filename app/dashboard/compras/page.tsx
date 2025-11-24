@@ -9,16 +9,16 @@ import { Input } from "@/components/ui/input"
 import { Plus, Eye, Trash2, Search } from "lucide-react"
 
 interface Compra {
-  id: string
-  proveedorId: string
-  fecha: string
-  total: number
-  estado: string
-  items: Array<{
-    productoId: string
-    cantidad: number
-    precioUnitario: number
-  }>
+  id_compra: number
+  fecha_compra: string
+  id_proveedor: number
+  id_usuario: number
+  monto_total: number
+  metodo_pago: number
+  numero_factura: string
+  notas: string | null
+  created_at: string
+  updated_at: string
 }
 
 export default function ComprasPage() {
@@ -28,6 +28,7 @@ export default function ComprasPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {
@@ -53,28 +54,34 @@ export default function ComprasPage() {
 
   const handleSearch = (term: string) => {
     setSearchTerm(term)
-    const filtered = compras.filter((c) => c.id.toLowerCase().includes(term.toLowerCase()))
+    const filtered = compras.filter((c) =>
+      c.id_compra.toString().includes(term)
+    )
     setFilteredCompras(filtered)
   }
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id_compra: number) => {
     if (!confirm("¿Estás seguro de que deseas eliminar esta compra?")) return
 
     try {
-      const response = await fetch(`/api/compras/${id}`, {
+      const response = await fetch(`/api/compras/${id_compra}`, {
         method: "DELETE",
       })
 
       if (response.ok) {
-        setCompras(compras.filter((c) => c.id !== id))
-        setFilteredCompras(filteredCompras.filter((c) => c.id !== id))
+        setCompras(compras.filter((c) => c.id_compra !== id_compra))
+        setFilteredCompras(filteredCompras.filter((c) => c.id_compra !== id_compra))
       }
     } catch (error) {
       console.error("Error deleting compra:", error)
     }
   }
 
-  const totalCompras = compras.reduce((sum, c) => sum + c.total, 0)
+  // 🔥 USAR monto_total REAL
+  const totalCompras = compras.reduce(
+    (sum, c) => sum + c.monto_total,
+    0
+  )
 
   if (loading) {
     return <div>Cargando...</div>
@@ -122,7 +129,9 @@ export default function ComprasPage() {
             <CardTitle className="text-sm font-medium">Promedio por Compra</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${(totalCompras / (compras.length || 1)).toFixed(2)}</div>
+            <div className="text-2xl font-bold">
+              ${(totalCompras / (compras.length || 1)).toFixed(2)}
+            </div>
             <p className="text-xs text-muted-foreground">USD</p>
           </CardContent>
         </Card>
@@ -153,33 +162,35 @@ export default function ComprasPage() {
                   <th className="text-left py-3 px-4 font-semibold">Proveedor</th>
                   <th className="text-left py-3 px-4 font-semibold">Fecha</th>
                   <th className="text-right py-3 px-4 font-semibold">Total</th>
-                  <th className="text-center py-3 px-4 font-semibold">Estado</th>
                   <th className="text-center py-3 px-4 font-semibold">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredCompras.map((compra) => (
-                  <tr key={compra.id} className="border-b border-border hover:bg-muted/50">
-                    <td className="py-3 px-4 font-medium">{compra.id}</td>
-                    <td className="py-3 px-4">{compra.proveedorId}</td>
-                    <td className="py-3 px-4">{new Date(compra.fecha).toLocaleDateString()}</td>
-                    <td className="py-3 px-4 text-right font-bold">${compra.total.toFixed(2)}</td>
-                    <td className="py-3 px-4 text-center">
-                      <span className="inline-block px-2 py-1 bg-blue-500/10 text-blue-600 text-xs rounded">
-                        {compra.estado}
-                      </span>
+                  <tr key={compra.id_compra} className="border-b border-border hover:bg-muted/50">
+                    <td className="py-3 px-4 font-medium">{compra.id_compra}</td>
+                    <td className="py-3 px-4">{compra.id_proveedor}</td>
+
+                    <td className="py-3 px-4">
+                      {new Date(compra.fecha_compra).toLocaleDateString()}
                     </td>
+
+                    <td className="py-3 px-4 text-right font-bold">
+                      ${compra.monto_total.toFixed(2)}
+                    </td>
+
                     <td className="py-3 px-4 text-center">
                       <div className="flex justify-center gap-2">
-                        <Link href={`/dashboard/compras/${compra.id}`}>
+                        <Link href={`/dashboard/compras/${compra.id_compra}`}>
                           <Button variant="ghost" size="sm">
                             <Eye className="h-4 w-4" />
                           </Button>
                         </Link>
+
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDelete(compra.id)}
+                          onClick={() => handleDelete(compra.id_compra)}
                           className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -193,7 +204,9 @@ export default function ComprasPage() {
           </div>
 
           {filteredCompras.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">No hay compras registradas</div>
+            <div className="text-center py-8 text-muted-foreground">
+              No hay compras registradas
+            </div>
           )}
         </CardContent>
       </Card>

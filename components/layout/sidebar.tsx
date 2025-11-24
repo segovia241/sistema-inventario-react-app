@@ -55,7 +55,7 @@ export function Sidebar() {
         } md:relative md:translate-x-0 z-40`}
       >
         <div className="p-6 border-b border-sidebar-border">
-          <h1 className="text-xl font-bold text-sidebar-foreground">TechInventory</h1>
+          <h1 className="text-xl font-bold text-sidebar-foreground">Smart Solutions Perú</h1>
         </div>
 
         <nav className="p-4 space-y-2">

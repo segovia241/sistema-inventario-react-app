@@ -204,33 +204,6 @@ export function ProductForm({ onSubmit, initialData, isLoading, categorias = [],
               </Select>
             </div>
 
-            <div>
-              <Label htmlFor="marca">Marca</Label>
-              <Select 
-                value={formData.marca || ""} 
-                onValueChange={(value) => handleSelectChange("marca", value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Seleccionar marca" />
-                </SelectTrigger>
-                <SelectContent>
-                  {marcas.length > 0 ? (
-                    marcas.map((marca) => (
-                      <SelectItem 
-                        key={getMarcaId(marca)} 
-                        value={getMarcaId(marca)}
-                      >
-                        {getMarcaNombre(marca)}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem value="no-data" disabled>
-                      No hay marcas disponibles
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
 
             <div className="md:col-span-2">
               <Label htmlFor="modelo">Modelo</Label>

@@ -6,16 +6,32 @@ export function Header() {
   const [user, setUser] = useState<any>(null)
 
   useEffect(() => {
-    try {
-      const userData = localStorage.getItem("usuario")
-      if (userData) {
-        const parsed = JSON.parse(userData)
-        setUser(parsed)
+    const loadUser = () => {
+      try {
+        const userData = localStorage.getItem("usuario")
+
+        // Si no hay nada, terminamos
+        if (!userData) {
+          setUser(null)
+          return
+        }
+
+        // Validar que realmente es JSON
+        try {
+          const parsed = JSON.parse(userData)
+          setUser(parsed)
+        } catch (e) {
+          console.warn("El valor en localStorage no era JSON, limpiando…")
+          localStorage.removeItem("usuario")
+          setUser(null)
+        }
+      } catch (error) {
+        console.error("Error al cargar usuario desde localStorage:", error)
+        setUser(null)
       }
-    } catch (error) {
-      console.error("Error al cargar usuario desde localStorage:", error)
-      setUser(null)
     }
+
+    loadUser()
   }, [])
 
   return (

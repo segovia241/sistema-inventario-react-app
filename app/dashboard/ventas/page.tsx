@@ -9,13 +9,19 @@ import { Input } from "@/components/ui/input"
 import { Plus, Eye, Trash2, Search } from "lucide-react"
 
 interface Venta {
-  id: string
-  clienteId: string
-  fecha: string
-  total: number
-  estado: string
-  items: Array<{
-    productoId: string
+  id_venta: number
+  fecha_venta: string
+  id_cliente: number
+  id_usuario: number
+  monto_total: number
+  metodo_pago: number
+  tipo_comprobante: number
+  numero_comprobante: string
+  notas: string | null
+  created_at: string
+  updated_at: string
+  items?: Array<{
+    productoId: number
     cantidad: number
     precioUnitario: number
   }>
@@ -28,6 +34,7 @@ export default function VentasPage() {
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState("")
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+
   useEffect(() => {
     const token = localStorage.getItem("authToken")
     if (!token) {
@@ -53,11 +60,15 @@ export default function VentasPage() {
 
   const handleSearch = (term: string) => {
     setSearchTerm(term)
-    const filtered = ventas.filter((v) => v.id.toLowerCase().includes(term.toLowerCase()))
+
+    const filtered = ventas.filter((v) =>
+      v.id_venta.toString().includes(term)
+    )
+
     setFilteredVentas(filtered)
   }
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: number) => {
     if (!confirm("¿Estás seguro de que deseas eliminar esta venta?")) return
 
     try {
@@ -66,15 +77,15 @@ export default function VentasPage() {
       })
 
       if (response.ok) {
-        setVentas(ventas.filter((v) => v.id !== id))
-        setFilteredVentas(filteredVentas.filter((v) => v.id !== id))
+        setVentas(ventas.filter((v) => v.id_venta !== id))
+        setFilteredVentas(filteredVentas.filter((v) => v.id_venta !== id))
       }
     } catch (error) {
       console.error("Error deleting venta:", error)
     }
   }
 
-  const totalVentas = ventas.reduce((sum, v) => sum + v.total, 0)
+  const totalVentas = ventas.reduce((sum, v) => sum + v.monto_total, 0)
 
   if (loading) {
     return <div>Cargando...</div>
@@ -153,25 +164,24 @@ export default function VentasPage() {
                   <th className="text-left py-3 px-4 font-semibold">Cliente</th>
                   <th className="text-left py-3 px-4 font-semibold">Fecha</th>
                   <th className="text-right py-3 px-4 font-semibold">Total</th>
-                  <th className="text-center py-3 px-4 font-semibold">Estado</th>
                   <th className="text-center py-3 px-4 font-semibold">Acciones</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredVentas.map((venta) => (
-                  <tr key={venta.id} className="border-b border-border hover:bg-muted/50">
-                    <td className="py-3 px-4 font-medium">{venta.id}</td>
-                    <td className="py-3 px-4">{venta.clienteId}</td>
-                    <td className="py-3 px-4">{new Date(venta.fecha).toLocaleDateString()}</td>
-                    <td className="py-3 px-4 text-right font-bold">${venta.total.toFixed(2)}</td>
-                    <td className="py-3 px-4 text-center">
-                      <span className="inline-block px-2 py-1 bg-green-500/10 text-green-600 text-xs rounded">
-                        {venta.estado}
-                      </span>
+                  <tr key={venta.id_venta} className="border-b border-border hover:bg-muted/50">
+                    <td className="py-3 px-4 font-medium">{venta.id_venta}</td>
+                    <td className="py-3 px-4">{venta.id_cliente}</td>
+                    <td className="py-3 px-4">
+                      {new Date(venta.fecha_venta).toLocaleDateString()}
                     </td>
+                    <td className="py-3 px-4 text-right font-bold">
+                      ${venta.monto_total.toFixed(2)}
+                    </td>
+
                     <td className="py-3 px-4 text-center">
                       <div className="flex justify-center gap-2">
-                        <Link href={`/dashboard/ventas/${venta.id}`}>
+                        <Link href={`/dashboard/ventas/${venta.id_venta}`}>
                           <Button variant="ghost" size="sm">
                             <Eye className="h-4 w-4" />
                           </Button>
@@ -179,7 +189,7 @@ export default function VentasPage() {
                         <Button
                           variant="ghost"
                           size="sm"
-                          onClick={() => handleDelete(venta.id)}
+                          onClick={() => handleDelete(venta.id_venta)}
                           className="text-destructive"
                         >
                           <Trash2 className="h-4 w-4" />

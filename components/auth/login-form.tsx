@@ -1,14 +1,11 @@
 "use client"
 
-import type React from "react"
-
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { da } from "date-fns/locale"
 
 export function LoginForm() {
   const router = useRouter()
@@ -16,7 +13,9 @@ export function LoginForm() {
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+
   const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000"
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError("")
@@ -30,21 +29,26 @@ export function LoginForm() {
       })
 
       const data = await response.json()
-      console.log(data);
-      if (!response.ok) {
-        setError(data.error || "Error al iniciar sesión")
+      console.log("Respuesta login:", data)
+
+      // ❌ Si el backend responde valido = false → error
+      if (!data.valido) {
+        setError("Credenciales inválidas")
         return
       }
 
-      // Guardar token en localStorage
-      localStorage.setItem("authToken", JSON.stringify(data.user))
+      // ✔ Guardar usuario en localStorage
       localStorage.setItem("usuario", JSON.stringify(data.user))
 
-      // Redirigir al dashboard
+      // ✔ Crear token falso solo para mantener sesión
+      localStorage.setItem("authToken", "login-ok")
+
+      // ✔ Redirigir
       router.push("/dashboard")
+
     } catch (err) {
-      setError("Error de conexión. Intenta de nuevo.")
       console.error(err)
+      setError("Error de conexión. Intenta de nuevo.")
     } finally {
       setLoading(false)
     }
@@ -56,8 +60,10 @@ export function LoginForm() {
         <CardTitle>Iniciar Sesión</CardTitle>
         <CardDescription>Ingresa tus credenciales para acceder</CardDescription>
       </CardHeader>
+
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
+
           {error && (
             <Alert variant="destructive">
               <AlertDescription>{error}</AlertDescription>
@@ -104,6 +110,7 @@ export function LoginForm() {
               Regístrate aquí
             </a>
           </p>
+
         </form>
       </CardContent>
     </Card>
